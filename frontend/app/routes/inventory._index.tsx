@@ -164,7 +164,7 @@ export default function Index() {
           ) : '' }
         </div>
       </div>
-      <Input placeholder="Search name..." defaultValue={searchParams.get('name') || undefined} onChange={(e)=>handleSearch(e.target.value)} />
+      <Input placeholder="Search name or specific ID..." defaultValue={searchParams.get('name') || undefined} onChange={(e)=>handleSearch(e.target.value)} />
       <Card>
         <div className="table w-full space-y-1">
           <div className="table-header-group bg-[rgba(0,0,0,0.02)]">

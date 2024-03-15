@@ -3,16 +3,23 @@ import prisma from '../libs/prisma';
 import type { Prisma } from '@prisma/client';
 
 const findInventories = (searchParams: InventorySearch) => {
-  const query: Prisma.ProductInventoryFindManyArgs = {
+  const name = searchParams.name
+  const intName = name ? !isNaN(parseInt(name)) ? parseInt(name) : undefined : undefined
+  const query: Prisma.ProductInventoryFindManyArgs = name ? {
     where: {
       product: {
-        name: {
-          contains: searchParams.name,
-          mode: 'insensitive'
-        }
+        OR: [
+          {name: {
+            contains: name,
+            mode: 'insensitive',
+          }},
+          {id : {
+            equals: intName
+          }}
+        ]
       }
     }
-  };
+  } : {};
   let sort: Prisma.ProductInventoryFindManyArgs = {orderBy: {id: 'desc'}}
   switch (searchParams.sort) {
     case 'idAsc':
