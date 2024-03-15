@@ -19,7 +19,7 @@ export const loader = async ({request}: LoaderFunctionArgs)=>{
 }
 
 export default function Index() {
-  const loaderData = useLoaderData()
+  const loaderData = useLoaderData<{user: {username: string, roleId: number, createdAt: Date}}>()
 
   return (
     <AppLayout>

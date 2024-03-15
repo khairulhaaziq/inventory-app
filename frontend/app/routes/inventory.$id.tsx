@@ -97,7 +97,7 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
 }
 
 export default function Index() {
-  const loaderData = useLoaderData()
+  const loaderData = useLoaderData<{user: {roleId: number}}>()
   const params = useParams<{id: string}>()
   const queryClient = useQueryClient()
   const fetcher = useFetcher<{success?: boolean}>();
@@ -112,7 +112,6 @@ export default function Index() {
   const flatCachedQueryListData = cachedQueryListData?.flatMap((i) => i[1]?.data, 1);
   const cachedData = flatCachedQueryListData?.length ? flatCachedQueryListData.find((i) => i?.productId === parseInt(id)) : undefined;
   const initialData = cachedData ? ({code: 200, data: cachedData}) : undefined;
-  console.log('init', initialData)
   const { isLoading, data } = useQuery({
     queryKey: ['inventory', id],
     queryFn: ({signal}) =>
