@@ -87,7 +87,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 }
 
 export default function Index() {
-  const loaderData = useLoaderData()
+  const loaderData = useLoaderData<{user: {roleId: number}}>()
   const [searchParams, setSearchParams] = useSearchParams()
   const urls = [`/api/inventory`]
   searchParams.forEach((v, k)=>{
@@ -99,9 +99,9 @@ export default function Index() {
   const limit = searchParams.get('limit')
   const constructedUrl = urls.length > 1 ? urls[0]+'?'+urls.splice(1).join('&') : urls[0]
   const { data, isPlaceholderData } = useQuery({
-    queryKey: ['inventory', page, limit, name, sort],
-    queryFn: () =>
-      fetch(constructedUrl, {method: 'GET'}).then((res) =>res.json()),
+    queryKey: ['inventory', 'list', page, limit, name, sort],
+    queryFn: ({signal}) =>
+      fetch(constructedUrl, {method: 'GET', signal}).then((res) =>res.json()),
   })
 
   const handleSearch = (newVal: string) => {

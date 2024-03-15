@@ -95,19 +95,31 @@ export const action = async ({request, params}: ActionFunctionArgs) => {
     });
   })
 }
+
 export default function Index() {
   const loaderData = useLoaderData()
-  const params = useParams()
+  const params = useParams<{id: string}>()
   const queryClient = useQueryClient()
   const fetcher = useFetcher<{success?: boolean}>();
   const navigate = useNavigate()
-  const id = params.id
+  const id = params.id!
   const [isEditing, setIsEditing] = useState(false)
+
+  //getting cached data
+  const cachedQueryListData = queryClient.getQueriesData({queryKey: ['inventory', 'list']})?.length
+    ? queryClient.getQueriesData({queryKey: ['inventory', 'list']})
+    : undefined;
+  const flatCachedQueryListData = cachedQueryListData?.flatMap((i) => i[1]?.data, 1);
+  const cachedData = flatCachedQueryListData?.length ? flatCachedQueryListData.find((i) => i?.productId === parseInt(id)) : undefined;
+  const initialData = cachedData ? ({code: 200, data: cachedData}) : undefined;
+  console.log('init', initialData)
   const { isLoading, data } = useQuery({
     queryKey: ['inventory', id],
-    queryFn: () =>
-      fetch(`/api/inventory/${id}`, {method: 'GET'}).then((res) =>res.json()),
-  })
+    queryFn: ({signal}) =>
+      fetch(`/api/inventory/${id}`, {method: 'GET', signal})
+        .then((res) =>res.json()),
+    initialData,
+  });
 
   const [form, fields] = useForm({
     defaultNoValidate: false,
