@@ -6,6 +6,11 @@ These are some of the features:
 - Role based authorization of actions, there are 2 roles, `admin` and `guest`, and admin can create, read, update and delete an item while the `guest` can only `read`.
 - Sort, filter and paginate inventory item.
 
+## Demo
+https://github.com/khairulhaaziq/inventory-app/assets/101852870/c495062a-c474-4a5b-867a-9750bb7d14da
+
+Visit the live demo [here](https://inventory-frontend.fly.dev/inventory)
+
 ## Getting up and running
 
 ### Backend
