@@ -6,6 +6,7 @@ import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { FormErrorText } from "~/components/FormErrorText";
 import { isValidSession, sessionCookie } from "~/utils/session.server";
+import { Button } from "~/components/Button";
 
 export const loader = async ({request}: LoaderFunctionArgs)=>{
   const validSession = await isValidSession(request)
@@ -91,6 +92,28 @@ export default function Page() {
         <div className="p-7 space-y-5">
           <div className="py-2">
             <h1 className="font-medium text-3xl">Register</h1>
+          </div>
+          <div className="flex items-center gap-x-2 text-xs text-neutral-500">
+            <div className="h-[1px] w-full bg-neutral-100 flex-grow"></div>
+            <p className="text-nowrap">DEMO ACCOUNTS</p>
+            <div className="h-[1px] w-full bg-neutral-100 flex-grow"></div>
+          </div>
+          <div className="space-y-3">
+            <Form method="post" className="w-full">
+              <Button className="w-full" size="large" text="login as admin" />
+              <input hidden type="hidden" name="username" value="admin" />
+              <input hidden type="hidden" name="password" value="Password12" />
+            </Form>
+            <Form method="post" className="w-full">
+              <Button className="w-full" size="large" text="login as guest" variant="secondary" />
+              <input hidden type="hidden" name="username" value="khairul" />
+              <input hidden type="hidden" name="password" value="Password12" />
+            </Form>
+          </div>
+          <div className="flex items-center gap-x-2 text-xs text-neutral-500">
+            <div className="h-[1px] w-full bg-neutral-100 flex-grow"></div>
+            <p>OR</p>
+            <div className="h-[1px] w-full bg-neutral-100 flex-grow"></div>
           </div>
           <Form method="post" className="space-y-5" {...getFormProps(form)}>
             <div className="space-y-1.5">
