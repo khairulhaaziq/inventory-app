@@ -110,8 +110,8 @@ export default function Index() {
     ? queryClient.getQueriesData({queryKey: ['inventory', 'list']})
     : undefined;
   const flatCachedQueryListData = cachedQueryListData?.flatMap((i) => i[1]?.data, 1);
-  const cachedData = flatCachedQueryListData?.length ? flatCachedQueryListData.find((i) => i?.productId === parseInt(id)) : undefined;
-  const initialData = cachedData ? ({code: 200, data: cachedData}) : undefined;
+  const initialData = flatCachedQueryListData?.length ? flatCachedQueryListData.find((i) => i?.productId === parseInt(id)) : undefined;
+
   const { isLoading, data } = useQuery({
     queryKey: ['inventory', id],
     queryFn: ({signal}) =>
