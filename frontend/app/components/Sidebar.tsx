@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 
 export const Sidebar = ()=>{
   return (
-    <div className="inset-y-0 min-h-[100dvh] w-[274px] bg-sky-950 flex-shrink-0 py-5 px-3">
+    <div className="inset-y-0 h-[100svh] sticky top-0 w-[274px] bg-sky-950 flex-shrink-0 py-5 px-3">
       <div className="">
         <div className="my-4 px-3 font-medium text-lg text-white">myInventory</div>
         <nav className="">
