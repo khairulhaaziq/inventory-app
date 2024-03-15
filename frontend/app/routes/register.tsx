@@ -99,13 +99,13 @@ export default function Page() {
             <div className="h-[1px] w-full bg-neutral-100 flex-grow"></div>
           </div>
           <div className="space-y-3">
-            <Form method="post" className="w-full">
-              <Button className="w-full" size="large" text="login as admin" />
+            <Form method="post" action="/login" className="w-full">
+              <Button className="w-full" size="large" text="login as admin" type="submit" />
               <input hidden type="hidden" name="username" value="admin" />
               <input hidden type="hidden" name="password" value="Password12" />
             </Form>
-            <Form method="post" className="w-full">
-              <Button className="w-full" size="large" text="login as guest" variant="secondary" />
+            <Form method="post" action="/login" className="w-full">
+              <Button className="w-full" size="large" text="login as guest" variant="secondary" type="submit" />
               <input hidden type="hidden" name="username" value="khairul" />
               <input hidden type="hidden" name="password" value="Password12" />
             </Form>
