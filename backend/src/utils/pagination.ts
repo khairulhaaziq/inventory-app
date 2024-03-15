@@ -1,5 +1,3 @@
-export const DEFAULT_PAGINATION_SEARCH = {page: 1, limit: 25}
-
 export function responsePaginate<T extends any>(data: T, count: number, page: number, limit: number){
   const prevPage = page > 1 ? page - 1 : null
   const totalPages = Math.ceil(count / limit)
