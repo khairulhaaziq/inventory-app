@@ -1,4 +1,4 @@
-import { ArchiveIcon, ExitIcon } from "@radix-ui/react-icons";
+import { ArchiveIcon, ExitIcon, PersonIcon } from "@radix-ui/react-icons";
 import { NavLink } from "@remix-run/react";
 import { ReactNode } from "react";
 
@@ -10,6 +10,7 @@ export const Sidebar = ()=>{
         <nav className="">
           <ul className="text-white font-normal">
             <NavItem link="/inventory" text="Inventory" icon={<ArchiveIcon className="w-[18px] h-[18px]" />} />
+            <NavItem link="/profile" text="Profile" icon={<PersonIcon className="w-[18px] h-[18px]" />}  />
             <NavItem link="/logout" text="Logout" icon={<ExitIcon className="w-[18px] h-[18px]" />}  />
           </ul>
         </nav>
