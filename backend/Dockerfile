@@ -5,8 +5,8 @@ FROM base AS builder
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-COPY package*.json tsconfig.json ./
-COPY src/ ./src/
+COPY package*json tsconfig.json src ./
+COPY . .
 
 RUN npm i
 RUN npm run build

@@ -39,6 +39,8 @@ Visit the live demo [here](https://inventory-frontend.fly.dev/inventory)
 ## Testing
 1. You can run the backend tests with `pnpm run test` from the `backend` directory
 
+![test screenshot](/test-screenshot.png)
+
 ## Deployment
 ### Backend
 1. You can deploy at any service that supports docker. For me I used fly.io, and you can use the same configuration.
