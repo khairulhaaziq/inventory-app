@@ -3,7 +3,7 @@ import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { NavLink, json, redirect, useFetcher, useLoaderData, useNavigate, useParams } from "@remix-run/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { AppLayout } from "~/components/AppLayout";
 import { Button } from "~/components/Button";
@@ -104,6 +104,7 @@ export default function Index() {
   const navigate = useNavigate()
   const id = params.id!
   const [isEditing, setIsEditing] = useState(false)
+  const firstInputRef = useRef<HTMLInputElement>(null)
 
   //getting cached data
   const cachedQueryListData = queryClient.getQueriesData({queryKey: ['inventory', 'list']})?.length
@@ -135,6 +136,12 @@ export default function Index() {
       setIsEditing(false)
     }
   }, [fetcher.data])
+
+  useEffect(()=>{
+    if (isEditing) {
+      firstInputRef.current?.select()
+    }
+  })
 
   return (
     <AppLayout>
@@ -180,7 +187,7 @@ export default function Index() {
                 <div className="px-4 h-11 items-center flex">{data?.product?.name}</div>
             ): (
               <div className="max-w-sm w-full pl-[1px]">
-                <Input disabled={fetcher.state === 'submitting'}  defaultValue={data?.product?.name} {...getInputProps(fields.productName, { type: 'text' })} />
+                <Input ref={firstInputRef} disabled={fetcher.state === 'submitting'}  defaultValue={data?.product?.name} {...getInputProps(fields.productName, { type: 'text' })} />
                 <FormErrorText id={fields.productName.errorId}>{fields.productName.errors}</FormErrorText>
               </div>
             )}
