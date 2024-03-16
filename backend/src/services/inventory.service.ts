@@ -20,14 +20,13 @@ const findInventories = (searchParams: InventorySearch) => {
       }
     }
   } : {};
-  let sort: Prisma.ProductInventoryFindManyArgs = {orderBy: {id: 'desc'}}
+  let sort: Prisma.ProductInventoryFindManyArgs = {orderBy: {product: {id: 'desc'}}}
   switch (searchParams.sort) {
     case 'idAsc':
-      sort = {orderBy: {id: 'asc'}}
+      sort = {orderBy: {product: {id: 'asc'}}}
       break;
-    case undefined:
     case 'idDesc':
-      sort = {orderBy: {id: 'desc'}}
+      sort = {orderBy: {product: {id: 'desc'}}}
       break;
     case 'priceAsc':
       sort = {orderBy: {product: {price: 'asc'}}}
@@ -46,8 +45,6 @@ const findInventories = (searchParams: InventorySearch) => {
       break;
     case 'qtyDesc':
       sort = {orderBy: {quantity: 'desc'}}
-      break;
-    default:
       break;
   }
   return prisma.$transaction([
