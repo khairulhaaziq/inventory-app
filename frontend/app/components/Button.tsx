@@ -6,7 +6,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger'
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({text, size='medium', variant='primary', children, ...props}, ref) => {
+export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({text, size='medium', variant='primary', children, className, ...props}, ref) => {
   return (
     <button ref={ref} className={
       `font-medium uppercase px-4 rounded-md tracking-widest transition-all outline-none focus:outline-sky-500 ${
@@ -14,7 +14,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({text, s
           variant === 'primary' ? ' bg-sky-500 text-white hover:bg-sky-400 active:bg-sky-400' :
           variant === 'secondary' ? 'text-sky-500 border-sky-500 border-[1.5px] hover:text-sky-400 active:text-sky-400 hover:border-sky-400 active:border-sky-400' :
           variant === 'danger' ? 'bg-red-500 text-white' :''
-        }`} {...props}>
+        } ${className}`} {...props}>
       {text} {children}
     </button>
   )

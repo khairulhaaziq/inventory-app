@@ -87,7 +87,7 @@ export const action = async ({request}: ActionFunctionArgs) => {
 }
 
 export default function Index() {
-  const loaderData = useLoaderData()
+  const loaderData = useLoaderData<{user: {roleId: number}}>()
   const [searchParams, setSearchParams] = useSearchParams()
   const urls = [`/api/inventory`]
   searchParams.forEach((v, k)=>{
@@ -99,9 +99,9 @@ export default function Index() {
   const limit = searchParams.get('limit')
   const constructedUrl = urls.length > 1 ? urls[0]+'?'+urls.splice(1).join('&') : urls[0]
   const { data, isPlaceholderData } = useQuery({
-    queryKey: ['inventory', page, limit, name, sort],
-    queryFn: () =>
-      fetch(constructedUrl, {method: 'GET'}).then((res) =>res.json()),
+    queryKey: ['inventory', 'list', page, limit, name, sort],
+    queryFn: ({signal}) =>
+      fetch(constructedUrl, {method: 'GET', signal}).then((res) =>res.json()),
   })
 
   const handleSearch = (newVal: string) => {
@@ -164,7 +164,7 @@ export default function Index() {
           ) : '' }
         </div>
       </div>
-      <Input placeholder="Search name..." defaultValue={searchParams.get('name') || undefined} onChange={(e)=>handleSearch(e.target.value)} />
+      <Input placeholder="Search name or specific ID..." defaultValue={searchParams.get('name') || undefined} onChange={(e)=>handleSearch(e.target.value)} />
       <Card>
         <div className="table w-full space-y-1">
           <div className="table-header-group bg-[rgba(0,0,0,0.02)]">

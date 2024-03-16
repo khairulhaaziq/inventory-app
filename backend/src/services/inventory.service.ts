@@ -3,31 +3,52 @@ import prisma from '../libs/prisma';
 import type { Prisma } from '@prisma/client';
 
 const findInventories = (searchParams: InventorySearch) => {
-  const query: Prisma.ProductInventoryFindManyArgs = {
+  const name = searchParams.name
+  const intName = name ? !isNaN(parseInt(name)) ? parseInt(name) : undefined : undefined
+  const query: Prisma.ProductInventoryFindManyArgs = name ? {
     where: {
       product: {
-        name: {
-          contains: searchParams.name,
-          mode: 'insensitive'
-        }
+        OR: [
+          {name: {
+            contains: name,
+            mode: 'insensitive',
+          }},
+          {id : {
+            equals: intName
+          }}
+        ]
       }
     }
-  };
+  } : {};
   let sort: Prisma.ProductInventoryFindManyArgs = {orderBy: {id: 'desc'}}
-  if (searchParams.sort && searchParams.sort === 'idAsc') {
-    sort = {orderBy: {id: 'asc'}}
-  }
-  if (!searchParams.sort || searchParams.sort === 'idDesc') {
-    sort = {orderBy: {id: 'desc'}}
-  }
-  if (searchParams.sort && searchParams.sort === 'priceAsc' || searchParams.sort === 'priceDesc') {
-    sort = {orderBy: {product: {price: (searchParams.sort === 'priceAsc' ? 'asc' : searchParams.sort === 'priceDesc' ? 'desc' : undefined),}}}
-  }
-  if (searchParams.sort && searchParams.sort === 'nameAsc' || searchParams.sort === 'nameDesc') {
-    sort = {orderBy: {product: {name: (searchParams.sort === 'nameAsc' ? 'asc' : searchParams.sort === 'nameDesc' ? 'desc' : undefined),}}}
-  }
-  if (searchParams.sort && searchParams.sort === 'qtyAsc' || searchParams.sort === 'qtyDesc') {
-    sort = {orderBy: {quantity: (searchParams.sort === 'qtyAsc' ? 'asc' : searchParams.sort === 'qtyDesc' ? 'desc' : undefined),}}
+  switch (searchParams.sort) {
+    case 'idAsc':
+      sort = {orderBy: {id: 'asc'}}
+      break;
+    case undefined:
+    case 'idDesc':
+      sort = {orderBy: {id: 'desc'}}
+      break;
+    case 'priceAsc':
+      sort = {orderBy: {product: {price: 'asc'}}}
+      break;
+    case 'priceDesc':
+      sort = {orderBy: {product: {price: 'desc'}}}
+      break;
+    case 'nameAsc':
+      sort = {orderBy: {product: {name: 'asc'}}}
+      break;
+    case 'nameDesc':
+      sort = {orderBy: {product: {name: 'desc'}}}
+      break;
+    case 'qtyAsc':
+      sort = {orderBy: {quantity: 'asc'}}
+      break;
+    case 'qtyDesc':
+      sort = {orderBy: {quantity: 'desc'}}
+      break;
+    default:
+      break;
   }
   return prisma.$transaction([
     prisma.productInventory.findMany({
