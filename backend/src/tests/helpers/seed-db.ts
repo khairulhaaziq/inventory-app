@@ -1,21 +1,39 @@
 import bcrypt from 'bcrypt';
 import { Prisma, PrismaClient } from '@prisma/client'
+import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient()
 
 export async function seed() {
+  await seedRoles()
   await seedUsers()
-  const suppliers = await seedSuppliers()
-  await seedProductsAndInventories(suppliers.map(i=>i?.id))
+  await seedSuppliers()
+  await seedProductsAndInventories()
   console.log(`Database has been seeded. 🌱`);
+}
+
+async function seedRoles() {
+  const data: Prisma.RoleCreateInput[] = [
+    {name: 'guest'},
+    {name: 'admin'},
+  ]
+
+  await Promise.all(data.map(async (d) => {
+    try {
+      await prisma.role.create({
+        data: d,
+      });
+      console.log(`successfully created ${d.name} role`)
+    } catch {
+      console.log(`fail to create ${d.name} role, skipped`)
+    }
+  }));
 }
 
 async function seedUsers() {
   const data: Prisma.UserCreateInput[] = [
-    {username: 'ahmad', Password: {create: { hash: await bcrypt.hash("Password12", 10) }}},
-    {username: 'khairul', Password: {create: { hash: await bcrypt.hash("Password12", 10) }}},
-    {username: 'haaziq', Password: {create: { hash: await bcrypt.hash("Password123", 10) }}},
-    {username: 'haaziq2', Password: {create: { hash: await bcrypt.hash("Password123", 10) }}},
+    {username: 'khairul', Password: {create: { hash: await bcrypt.hash("Password12", 10) }}, role: {connectOrCreate: {where: {name: 'guest'}, create: {name: 'guest'}}}},
+    {username: 'admin', Password: {create: { hash: await bcrypt.hash("Password12", 10) }}, role: {connectOrCreate: {where: {name: 'admin'}, create: {name: 'admin'}}}},
   ]
 
   await Promise.all(data.map(async (d) => {
@@ -31,40 +49,62 @@ async function seedUsers() {
 }
 
 async function seedSuppliers() {
-  const data: Prisma.SupplierCreateInput[] = [
-    {name: 'Supplier1'},
-    {name: 'Supplier2'},
-    {name: 'Supplier3'},
-  ]
+  const data: Prisma.SupplierCreateInput[] = []
 
-  const newSuppliers = await Promise.all(data.map(async (d) => {
+  for(let i = 0; i < 3; i++) {
+    const supplier = {
+      name: faker.company.name()
+    }
+    data.push(supplier)
+  }
+
+  await Promise.all(data.map(async (d) => {
     try {
-      const newSupplier = await prisma.supplier.create({
+      await prisma.supplier.create({
         data: d,
       });
       console.log(`successfully created ${d.name}`)
-      return newSupplier
     } catch {
       console.log(`fail to create ${d.name}, skipped`)
     }
   }));
-
-  return newSuppliers
 }
 
-async function seedProductsAndInventories(ids: (number | undefined)[]) {
-  const data: Prisma.ProductCreateInput[] = [
-    {name: 'Product1', price: 18.99, supplier: {connect: {id: ids[0]}}, user: {connect: { username: 'ahmad'}}, inventory: {create: {quantity: 5}}},
-    {name: 'Product2', price: 12.85, supplier: {connect: {id: ids[1]}}, user: {connect: { username: 'khairul'}}, inventory: {create: {quantity: 7}}},
-    {name: 'Product3', price: 14.60, supplier: {connect: {id: ids[2]}}, user: {connect: { username: 'haaziq'}}, inventory: {create: {quantity: 2}}},
-  ]
-
-  try {
-    await prisma.product.create({
-      data: data[0],
-    });
-    console.log(`successfully created ${data[0].name}`)
-  } catch(e) {
-    console.log(`fail to create ${data[0].name}, skipped, error: ${e}`)
+async function seedProductsAndInventories() {
+  const products: Prisma.ProductCreateInput[] = []
+  for(let i = 0; i < 30; i++) {
+    const product: Prisma.ProductCreateInput = {
+      name: faker.commerce.productName(),
+      price: Number(faker.commerce.price()),
+      supplier: {
+        connectOrCreate: {
+          where: {id: 1},
+          create: {
+            name: 'Supplier1'
+          }
+        }
+      },
+      user: {
+        connectOrCreate: {
+          where: {username: 'admin'},
+          create: {username: 'admin'}
+        }
+      },
+      inventory: {
+        create: {quantity: Math.ceil(Math.random()*200)}
+      }
+    }
+    products.push(product)
   }
+
+  await Promise.all(products.map(async (d) => {
+    try {
+      await prisma.product.create({
+        data: d,
+      });
+      console.log(`successfully created ${d.name}`)
+    } catch {
+      console.log(`fail to create ${d.name}, skipped`)
+    }
+  }));
 }

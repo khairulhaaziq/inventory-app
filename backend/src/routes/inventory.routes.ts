@@ -44,7 +44,7 @@ app
     }
   })
 
-  .post('/add-inventory', inventoryValidator.createInventory, authMiddleware, async (c) => {
+  .post('/add-inventory', authMiddleware, inventoryValidator.createInventory, async (c) => {
     try {
       const product = await inventoryService.createInventory(c.req.valid('json'), c.get('userId'))
       if (product) {
@@ -57,7 +57,7 @@ app
     }
   })
 
-  .patch('/update-inventory', inventoryValidator.updateInventory, authMiddleware, async (c) => {
+  .patch('/update-inventory', authMiddleware, inventoryValidator.updateInventory, async (c) => {
     try {
       const product = await inventoryService.updateInventory(c.req.valid('json'))
       if (product) {
@@ -70,7 +70,7 @@ app
     }
   })
 
-  .delete('/delete-inventory', inventoryValidator.deleteInventory, authMiddleware, async (c) => {
+  .delete('/delete-inventory', authMiddleware, inventoryValidator.deleteInventory, async (c) => {
     try {
       const product = await inventoryService.deleteInventory(c.req.valid('json').productId)
       if (product) {

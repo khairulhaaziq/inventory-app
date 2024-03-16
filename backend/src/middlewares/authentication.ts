@@ -3,7 +3,14 @@ import { authService } from "../services/auth.service"
 
 export const authMiddleware: MiddlewareHandler<{
   Variables: {
-    userId: string
+    userId: string,
+    user: {
+      id: string;
+      createdAt: Date;
+      updatedAt: Date;
+      username: string;
+      roleId: number | null;
+    }
   }
 }> = async (c, next) => {
   const sessionId = c.req.header().authorization?.split('Bearer ')[1]
@@ -14,6 +21,7 @@ export const authMiddleware: MiddlewareHandler<{
     const user = await authService.validateSession(sessionId)
     if (user) {
       c.set('userId', user.id)
+      c.set('user', user)
       return await next()
     } else {
       return c.newResponse('Unauthorized', {status: 401})
