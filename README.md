@@ -12,7 +12,7 @@ https://github.com/khairulhaaziq/inventory-app/assets/101852870/c495062a-c474-4a
 
 Visit the live demo [here](https://inventory-frontend.fly.dev/inventory)
 
-> **Note**
+> [!NOTE]
 > Your session might be revoked if there is another new active session with the same login. If you find data not showing, that might be the case. Fixing it is simply logout and login again(Yes, the other user will be logged off).
 
 ## Getting up and running
